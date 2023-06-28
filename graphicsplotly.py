@@ -41,7 +41,7 @@ percentile_50 = {mode}
     return optimistic, realistic, pessimistic
 
 
-def burnup(start_date, child_issues):
+def burnup(start_date, child_issues, duedateIssue = None):
     # Dados fornecidos
     num_weeks = 60
 
@@ -49,6 +49,8 @@ def burnup(start_date, child_issues):
     backlog_cumulative_list = []
     delivered_cumulative_list = []
     deliveries_by_period_list = []
+    duedate_list = []
+    find_duedate = False
 
     # intervalor entre as datas para os cálculos
     interval = timedelta(days=7)
@@ -62,6 +64,14 @@ def burnup(start_date, child_issues):
 
         else:
             dates.append(dates[i-1] + interval)
+            
+            
+        if duedateIssue != None:
+            if dates[i] < duedateIssue or find_duedate:
+                duedate_list.append(0)
+            else:
+                duedate_list.append(1)
+                find_duedate = True
 
         for issue in child_issues:
             creared_date_child = datetime.strptime(
@@ -100,18 +110,20 @@ def burnup(start_date, child_issues):
         else:
             delivered_cumulative_list.append(0)
 
-    print(backlog_cumulative_list)
-    print(delivered_cumulative_list)
-    print(deliveries_by_period_list)
-    print(dates)
-    print(len(dates))
-    print(len(backlog_cumulative_list))
-    print(len(delivered_cumulative_list))
-    print(len(deliveries_by_period_list))
+    # print(backlog_cumulative_list)
+    # print(delivered_cumulative_list)
+    # print(deliveries_by_period_list)
+    # print(dates)
+    # print(len(dates))
+    # print(len(backlog_cumulative_list))
+    # print(len(delivered_cumulative_list))
+    # print(len(deliveries_by_period_list))
 
     optimistic_line = []
     realistic_line = []
     pessimistic_line = []
+    
+    duedate_list = [backlog_cumulative_list[-1] if x == 1 else x for x in duedate_list]
 
     optimistic_cumulative = 0
     realistic_cumulative = 0
@@ -143,9 +155,19 @@ def burnup(start_date, child_issues):
     # Plotagem do gráfico
     fig = go.Figure()
 
+
+        
     # Adiciona as barras de entregas
-    fig.add_trace(go.Bar(x=dates, y=delivered_cumulative_list,
+    fig.add_trace(go.Bar(x=dates, y=delivered_cumulative_list, textposition='outside',  
                   name='Entregas', text=delivered_cumulative_list))
+    
+    # Adiciona as barras de DUEDATE
+    if duedateIssue != None:
+        fig.add_trace(go.Bar(x=dates, y=duedate_list,
+                             marker=dict(color='black'),
+                             name='Due Date',))
+    
+        
 
     # Adiciona as linhas de tendência
     fig.add_trace(go.Scatter(x=dates, y=pessimistic_line[:len(
@@ -179,8 +201,8 @@ def burnup(start_date, child_issues):
             bgcolor='rgba(255, 255, 255, 0.5)',
             bordercolor='rgba(0, 0, 0, 0.5)'
         ),
-        bargap=0.2,
-        bargroupgap=0.1
+        bargap=0.00
+        #bargroupgap=0.00
     )
 
     fig.show()

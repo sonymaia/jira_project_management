@@ -21,6 +21,7 @@ def project_status():
     
     duedateIssue = iniciative['issues'][0]['fields']['duedate']
     startdate = iniciative['issues'][0]['fields']['customfield_10015']
+
     
     
     duedateIssue = datetime.strptime(duedateIssue, '%Y-%m-%d').date()
@@ -56,7 +57,7 @@ def project_status():
         
     print('======================================')
  
-    burnup(startdate, child_issues['issues'])
+    burnup(startdate, child_issues['issues'], duedateIssue)
     
 
     

@@ -205,4 +205,4 @@ def burnup(start_date, child_issues, duedateIssue = None):
         #bargroupgap=0.00
     )
 
-    fig.show()
+    return fig

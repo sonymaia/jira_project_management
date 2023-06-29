@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Exemplo Bootstrap</h1>
+    <form method="POST" class="mt-4">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="search_field" name="search_field" 
+                    placeholder="Digite sua pesquisa..." value="{{ search_field }}">
+
+                    <button type="submit" class="btn btn-primary">Pesquisar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    {% if fig %}
+    <div id="grafico-burnup" style="height: 600px;"></div>
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        var figData = {{ fig | safe }};
+        Plotly.newPlot('grafico-burnup', figData.data, figData.layout);
+    </script>
+    {% endif %}
+</div>
+{% endblock %}

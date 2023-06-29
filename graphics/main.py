@@ -1,17 +1,19 @@
 from  jiratools import JiraTools
 from datetime import datetime, date
-from graphicsplotly import burnup
+from graphics.graphicsplotly import burnup
 
 def main():
     project_status()
     
 
     
-def project_status(): 
+def project_status(id): 
     jira = JiraTools().connect()
     
     #issue_id = input("Digite o Id da issue: ")
-    issue_id = 'BOAC-652'
+    #issue_id = 'BOAC-652'
+    issue_id = id
+    
     
     #Pega as informaçoes da Issue Pai
     jql_request = f'issuekey = {issue_id}'
@@ -57,7 +59,7 @@ def project_status():
         
     print('======================================')
  
-    burnup(startdate, child_issues['issues'], duedateIssue)
+    return burnup(startdate, child_issues['issues'], duedateIssue)
     
 
     

@@ -18,7 +18,7 @@ def index(request):
         project_data = project_status(search_field)
         
         if not isinstance(project_data, dict):
-            messages.danger(request, project_data)
+            messages.error(request, project_data)
             project_data = None
         else:
             #transform chart data into json

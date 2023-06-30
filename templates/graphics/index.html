@@ -2,29 +2,55 @@
 
 {% block content %}
 <div class="container">
-    <h1>Exemplo Bootstrap</h1>
+    <h1 style="display: inline;">Burn-Up</h1>
+    <p style="display: inline;">(beta 1.0)</p>
     <form method="POST" class="mt-4">
         {% csrf_token %}
         <div class="row">
             <div class="col-lg-8">
                 <div class="input-group">
-                    <input type="text" class="form-control" id="search_field" name="search_field" 
-                    placeholder="Digite sua pesquisa..." value="{{ search_field }}">
+                    <input type="text" class="form-control" id="search_field" name="search_field"
+                        placeholder="Digite o ID da Issue aqui..." value="{{ search_field }}">
 
                     <button type="submit" class="btn btn-primary">Pesquisar</button>
                 </div>
             </div>
         </div>
+        {% include 'partials/_alerts.html' %}
     </form>
 
     {% if fig %}
-    <div id="grafico-burnup" style="height: 600px;"></div>
+    <div class="container">
+        <h3>Informações da {{ issue_id }} - {{ summary }}</h3>
+        <div id="grafico-burnup" style="height: 600px;">
+            <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+            <script>
+                var figData = {{ fig | safe }};
+                Plotly.newPlot('grafico-burnup', figData.data, figData.layout);
+            </script>
+        </div>
+    </div>
 
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script>
-        var figData = {{ fig | safe }};
-        Plotly.newPlot('grafico-burnup', figData.data, figData.layout);
-    </script>
+
+    <div class="mt-4">
+        <h3>Resumo</h3>
+        <ul>
+            <li>Otimista: {{ optimistic|floatformat:1 }}</li>
+            <li>Realista: {{ realistic|floatformat:1 }}</li>
+            <li>Pessimista: {{ pessimistic|floatformat:1 }}</li>
+        </ul>
+        <ul>
+            <li>Data de comprometimento {{ duedateIssue }}</li>
+            <li>Faltam {{ days_left }} dias para a entrega</li>
+            
+            <li> Total de itens filhos(stories):{{ total_issues }}</li>
+            <li>Total Done:{{ total_done }}</li>
+            <li>Conclusão de {{ completion_percentage|floatformat:2 }}%</li>
+
+        </ul>
+    </div>
+    
+
     {% endif %}
 </div>
 {% endblock %}

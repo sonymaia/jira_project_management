@@ -131,7 +131,7 @@ def burnup(start_date, child_issues, duedateIssue = None):
 
     optimistic, realistic, pessimistic = calculation_trend_lines(
         deliveries_by_period_list)
-
+    
     total_items = backlog_cumulative_list[-1]
 
     for i in range(num_weeks):
@@ -165,7 +165,7 @@ def burnup(start_date, child_issues, duedateIssue = None):
     if duedateIssue != None:
         fig.add_trace(go.Bar(x=dates, y=duedate_list,
                              marker=dict(color='black'),
-                             name='Due Date',))
+                             name='Data Esperada',))
     
         
 
@@ -205,4 +205,5 @@ def burnup(start_date, child_issues, duedateIssue = None):
         #bargroupgap=0.00
     )
 
-    return fig
+    chart_data = {'optimistic': optimistic, 'realistic': realistic, 'pessimistic': pessimistic, 'fig': fig}
+    return chart_data

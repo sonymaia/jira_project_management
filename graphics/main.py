@@ -46,8 +46,8 @@ def project_status(id):
     
     
     # Get the information of the child Issues
-    jql_child_issues = f'issuekey in portfolioChildIssuesOf({issue_id} ) and issuetype in (story)'
-    child_issues = jira.jql(jql_child_issues)
+    jql_child_issues = f'issuekey in portfolioChildIssuesOf("{issue_id}" ) and issuetype in (Story)'
+    child_issues = jira.jql(jql=jql_child_issues, limit=1000)
 
     total_issues = len(child_issues['issues'])
     total_done = 0
@@ -56,7 +56,7 @@ def project_status(id):
     
     for issue in child_issues['issues']:
         
-        #print( 'key:', issue['key'])
+        print( 'key:', issue['key'])
         #print( 'summary:', issue['fields']['summary'])
         ##print( 'created:', issue['fields']['created'])
         #print( 'resolutiondate:', issue['fields']['resolutiondate'])
@@ -71,6 +71,9 @@ def project_status(id):
             #print( 'issuetype:', issue['fields']['issuetype']['name'])
         
     print('======================================')
+
+    print('total_declined:',total_declined)
+    print('total_issues:',total_issues)
 
     total_issues = total_issues - total_declined
     total_done = total_done - total_declined
